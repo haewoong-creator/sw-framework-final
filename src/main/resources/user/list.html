@@ -1,0 +1,49 @@
+<!-- src/main/resources/templates/product/list.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>회원 목록</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}" />
+</head>
+<body>
+    <h1>회원 목록</h1>
+
+    <!-- 검색 폼: GET 방식으로 keyword 파라미터를 URL에 남깁니다 -->
+    <form th:action="@{/user/list}" method="get">
+        <input type="text" name="keyword" th:value="${keyword}" placeholder="검색어 입력…" />
+        <button type="submit">검색</button>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>회원순번</th>
+                <th>아이디</th>
+                <th>이름</th>
+                <th>이메일</th>
+                <th>등록일</th>
+				<th>수정일시</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+            <tr th:each="user : ${users}">
+                <td th:text="${user.userSeq}"></td>
+                <td th:text="${user.userId}"></td>
+                <td>
+                    <!-- 상세 페이지 링크: seq와 현재 keyword 정보 모두 URL에 남김 -->
+                    <a th:href="@{/user/detail/{seq}(seq=${user.userSeq}, keyword=${keyword})}"
+                       th:text="$user.userNm}"></a>
+                </td>
+                <td th:text="${#dates.format(user.regdt, 'yyyy-MM-dd HH:mm')}"></td>
+                <td th:text="${#dates.format(user.moddt, 'yyyy-MM-dd HH:mm')}"></td>
+            </tr>
+            <!-- 검색 결과가 없을 때 -->
+            <tr th:if="${#lists.isEmpty(products)}">
+                <td colspan="5">찾으시는 회원이 없습니다.</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
